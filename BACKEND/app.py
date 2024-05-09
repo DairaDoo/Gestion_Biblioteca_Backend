@@ -1,5 +1,5 @@
 import sys
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import mariadb
 from config import DATABASE_CONFIG
 from flask_cors import CORS
@@ -71,6 +71,20 @@ def get_categorias():
         error_message = f"Error al ejecutar la consulta SQL para obtener categorías: {e}"
         print(error_message)
         return jsonify({'error': error_message}), 500
+    
+@app.route('/api/crearUsuario', methods=["POST"])
+def insert_new_user():
+    try:
+        query = "INSERT INTO Usuarios (nombre) VALUES ('DummieUser2')"
+        cursor.execute(query)
+        connection.commit()
+        
+        return "Usuario agregado exitosamente!"
+    
+    except mariadb.Error as e:
+        print("Error:", e)
+        return "Error al agregar el usuario a la base de datos.", 500
+        
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True, port=5000)
