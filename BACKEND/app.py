@@ -78,6 +78,7 @@ def get_categorias():
     
 @app.route('/api/crearUsuario', methods=["POST"])
 def insert_new_user():
+    """inserta un usuario a la base de datos Usuarios."""
     try:
         query = "INSERT INTO Usuarios (nombre) VALUES ('DummieUser2')"
         cursor.execute(query)
