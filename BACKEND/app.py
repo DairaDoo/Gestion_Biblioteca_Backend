@@ -4,6 +4,10 @@ import mariadb
 from config import DATABASE_CONFIG
 from flask_cors import CORS
 
+# CORS permite que nuestro servidor Flask acepte solicitudes
+# desde otros dominios, facilitando la interacción con
+# aplicaciones web externas.
+
 app = Flask(__name__)
 CORS(app)
 
