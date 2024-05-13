@@ -76,8 +76,22 @@ def get_categorias():
         print(error_message)
         return jsonify({'error': error_message}), 500
     
-@app.route('/api/crearUsuario', methods=["POST"])
+@app.route('/api/crearLibro', methods=["POST"])
 def insert_new_user():
+    """inserta un libro a la base de datos Usuarios."""
+    try:
+        query = "INSERT INTO Libros (Titulo, Autor, id_categoria) VALUES ('DummieBook', 'Dummie', 1)"
+        cursor.execute(query)
+        connection.commit()
+        
+        return "Libro agregado exitosamente!"
+    
+    except mariadb.Error as e:
+        print("Error:", e)
+        return "Error al agregar el libro a la base de datos.", 500
+    
+@app.route('/api/crearUsuario', methods=["POST"])
+def insert_new_book():
     """inserta un usuario a la base de datos Usuarios."""
     try:
         query = "INSERT INTO Usuarios (nombre) VALUES ('DummieUser2')"
