@@ -107,10 +107,10 @@ def insert_new_book():
 
 @app.route('/api/borrarUsuario/<int:num_socio>', methods=["DELETE"])
 def delete_user(num_socio):
-    """Borra un usuario de la base de datos utilizando su ID y actualiza los préstamos relacionados."""
+    """Borra un usuario de la base de datos utilizando su ID y elimina los préstamos relacionados."""
     try:
-        # Actualiza los registros de préstamos relacionados para establecer el número de socio en NULL
-        query = "UPDATE Prestamos SET num_socio = NULL WHERE num_socio = ?"
+        # Elimina los préstamos asociados al usuario
+        query = "DELETE FROM Prestamos WHERE num_socio = ?"
         cursor.execute(query, (num_socio,))
         connection.commit()
 
@@ -125,6 +125,7 @@ def delete_user(num_socio):
         error_message = f"Error al eliminar usuario: {e}"
         print(error_message)
         return jsonify({'error': error_message}), 500
+
 
     
 
@@ -143,7 +144,36 @@ def delete_book(id_libro):
         print(error_message)
         return jsonify({'error': error_message}), 500
     
+@app.route('/api/borrarPrestamo/<int:id_prestamo>', methods=["DELETE"])
+def delete_prestamo(id_prestamo):
+    """Borra un prestamo de la base de datos utilizando su ID."""
+    try:
+        query = "DELETE FROM Prestamos WHERE id_prestamo = ?"
+        cursor.execute(query, (id_prestamo, ))
+        connection.commit()
+        
+        return jsonify({'message': 'Prestamo eliminado exitosamente'})
     
+    except mariadb.Error as e:
+        error_message = f"Error al eliminar usuario: {e}"
+        print(error_message)
+        return jsonify({'error': error_message}), 500
+    
+
+@app.route('/api/borrarCategoria/<int:id_categoria>', methods=["DELETE"])
+def delete_categoria(id_categoria):
+    """Borra un prestamo de la base de datos utilizando su ID."""
+    try:
+        query = "DELETE FROM Categorias WHERE id_categoria = ?"
+        cursor.execute(query, (id_categoria, ))
+        connection.commit()
+        
+        return jsonify({'message': 'Categoria eliminada exitosamente'})
+    
+    except mariadb.Error as e:
+        error_message = f"Error al eliminar categoria: {e}"
+        print(error_message)
+        return jsonify({'error': error_message}), 500
 
 
 if __name__ == '__main__':
