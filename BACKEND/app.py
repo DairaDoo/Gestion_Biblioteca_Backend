@@ -22,8 +22,7 @@ except mariadb.Error as e:
 @app.route('/', methods=["GET"])
 def hello_world():
     """Ruta de prueba para verificar que el servidor está funcionando."""
-    return '¡Hola, mundo!'
-
+    return '¡Hola, mundo!' 
 
 @app.route('/api/getUsuarios', methods=["GET"])
 def get_usuarios():
@@ -89,6 +88,7 @@ def insert_new_user():
     except mariadb.Error as e:
         print("Error:", e)
         return "Error al agregar el libro a la base de datos.", 500
+
     
 @app.route('/api/crearUsuario', methods=["POST"])
 def insert_new_book():
@@ -103,7 +103,48 @@ def insert_new_book():
     except mariadb.Error as e:
         print("Error:", e)
         return "Error al agregar el usuario a la base de datos.", 500
+
+
+@app.route('/api/borrarUsuario/<int:num_socio>', methods=["DELETE"])
+def delete_user(num_socio):
+    """Borra un usuario de la base de datos utilizando su ID y actualiza los préstamos relacionados."""
+    try:
+        # Actualiza los registros de préstamos relacionados para establecer el número de socio en NULL
+        query = "UPDATE Prestamos SET num_socio = NULL WHERE num_socio = ?"
+        cursor.execute(query, (num_socio,))
+        connection.commit()
+
+        # Borra el usuario de la tabla de usuarios
+        query = "DELETE FROM Usuarios WHERE num_socio = ?"
+        cursor.execute(query, (num_socio,))
+        connection.commit()
+
+        return jsonify({'message': 'Usuario eliminado exitosamente'})
+
+    except mariadb.Error as e:
+        error_message = f"Error al eliminar usuario: {e}"
+        print(error_message)
+        return jsonify({'error': error_message}), 500
+
+    
+
+@app.route('/api/borrarLibro/<int:id_libro>', methods=["DELETE"])
+def delete_book(id_libro):
+    """Borra un libro de la base de datos utilizando su ID."""
+    try:
+        query = "DELETE FROM Libros WHERE id_libro = ?"
+        cursor.execute(query, (id_libro, ))
+        connection.commit()
         
+        return jsonify({'message': 'Libro eliminado exitosamente'})
+    
+    except mariadb.Error as e:
+        error_message = f"Error al eliminar usuario: {e}"
+        print(error_message)
+        return jsonify({'error': error_message}), 500
+    
+    
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)
