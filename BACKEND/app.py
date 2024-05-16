@@ -175,6 +175,23 @@ def delete_categoria(id_categoria):
         print(error_message)
         return jsonify({'error': error_message}), 500
 
+@app.route('/api/new_user', methods=['POST'])
+def new_user():
+    # Obtain JSON data from the request
+    datos = request.json
+    nombre = datos.get('nombre')
+    
+    # Insert the new user into the database
+    strQry = 'INSERT INTO Usuarios (nombre) VALUES (?)'
+    cursor.execute(strQry, (nombre,))
+    connection.commit()
+
+    # Return a JSON response indicating success
+    response = {"message": "New user added successfully"}
+    return jsonify(response), 200
+
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)
