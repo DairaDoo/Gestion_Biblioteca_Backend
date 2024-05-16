@@ -177,6 +177,7 @@ def delete_categoria(id_categoria):
 
 @app.route('/api/new_user', methods=['POST'])
 def new_user():
+    """Crea un usario en la base de datos."""
     # Obtain JSON data from the request
     datos = request.json
     nombre = datos.get('nombre')
@@ -187,9 +188,58 @@ def new_user():
     connection.commit()
 
     # Return a JSON response indicating success
-    response = {"message": "New user added successfully"}
+    response = {"message": "Usuario añadido exitosamente."}
     return jsonify(response), 200
 
+
+@app.route('/api/new_categoria', methods=['POST'])
+def new_category():
+    """Crea un categoria en la base de datos."""
+    # Obtain JSON data from the request
+    datos = request.json
+    nombre_categoria = datos.get('nombre_categoria')
+    
+    
+    # Insert the new user into the database
+    strQry = 'INSERT INTO Categorias (nombre_cateogoria) VALUES (?)'
+    cursor.execute(strQry, (nombre_categoria,))
+    connection.commit()
+
+    # Return a JSON response indicating success
+    response = {"message": "Categoria añadida exitosamente."}
+    return jsonify(response), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/api/update_user', methods=['POST'])
+def update_user():
+    """Actualiza un usario en la base de datos."""
+    # Obtain JSON data from the request
+    datos = request.json
+    id_usuario = datos.get('num_socio')
+    nombre = datos.get('nombre')
+    
+    # Update the user's name in the database
+    strQry = 'UPDATE Usuarios SET nombre = ? WHERE num_socio = ?'
+    cursor.execute(strQry, (nombre, id_usuario))
+    connection.commit()
+
+    # Return a JSON response indicating success
+    response = {"message": "User name updated successfully"}
+    return jsonify(response), 200
 
 
 
